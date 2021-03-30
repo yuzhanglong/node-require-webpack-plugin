@@ -1,6 +1,6 @@
 {
   "name": "node-require-webpack-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "lib/index.js",
   "module": "esm/index.js",
   "repository": "https://github.com/yuzhanglong/node-require-webpack-plugin.git",
