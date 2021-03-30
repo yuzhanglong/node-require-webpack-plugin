@@ -10,9 +10,9 @@
 const a = require(process.argv)
 ```
 
-上面的代码中，我们动态 `require` 了用户传入的参数，但 webpack 并不知道 -- 在 build 时它会尝试寻找 `process.argv` 的值。
+上面的代码中，我们动态 `require` 了用户传入的参数，但 webpack 并不知道 -- 在 build 时它会尝试寻找 `process.argv` 的值并读取其内容以供打包，这很明显是无法做到的。
 
-在我们执行打包时的代码时，我们会得到异常，这个异常产生的原因是 webpack 打包时找不到参数所对应的模块。
+因此在我们执行打包后的代码时会得到 `module not found` 异常。
 
 ## 用法
 
@@ -32,6 +32,22 @@ module.exports = {
 }
 ```
 
+如果你的项目基于 `ts-loader`，请将 `transpileOnly` 置为 `true`：
+
+```javascript
+  module: {
+  rules: [
+    {
+      test: /\.tsx?$/,
+      loader: 'ts-loader',
+      options: {
+        transpileOnly: true
+      }
+    }
+  ]
+}
+```
+
 在你需要动态 require 的语句前增加 `/*#__PURE_REQUIRE__*/` 标记，例如：
 
 ```javascript
@@ -40,8 +56,8 @@ const requireResult =  /*#__PURE_REQUIRE__*/ require(`${configPath}`);
 
 ## 工作原理
 
-- 将所有用户标记 `/*#__PURE_REQUIRE__*/` 的模块全部换成一个函数 `__WEBPACK_PURE__REQUIRE__`
-- 为每个入口文件添加 `__WEBPACK_PURE__REQUIRE__` 的实现：
+- 将所有用户标记 `/*#__PURE_REQUIRE__*/` 的模块全部换成一个函数 `__WEBPACK_PURE_REQUIRE__`
+- 为每个入口文件添加 `__WEBPACK_PURE_REQUIRE__` 的实现：
 
 ```javascript
 function __WEBPACK_PURE_REQUIRE__(content) {
@@ -49,7 +65,6 @@ function __WEBPACK_PURE_REQUIRE__(content) {
   return require(content)
 }
 ```
-
 
 
 
