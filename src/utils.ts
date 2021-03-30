@@ -36,7 +36,7 @@ export const getRequireContent = (asset: SourceLike) => `function __WEBPACK_PURE
 export const createRules = (): webpack.RuleSetRule[] => {
   return [
     {
-      test: /\.js$/,
+      test: [/\.js$/, /\.ts$/],
       loader: LOADER_PATH
     }
   ]
